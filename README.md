@@ -1,8 +1,6 @@
-# CDK EKS Sample
+# EKS sample project with CDK
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=engel80_cdk-eks&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=engel80_cdk-eks)  [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=engel80_cdk-eks&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=engel80_cdk-eks)
-
-EKS sample project with CDK.
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ContainerOnAWS_eks-cdk&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ContainerOnAWS_eks-cdk) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ContainerOnAWS_eks-cdk&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=ContainerOnAWS_eks-cdk)
 
 ## Table of Contents
 
@@ -15,7 +13,7 @@ EKS sample project with CDK.
 ## Prerequisites
 
 ```bash
-npm install -g aws-cdk@2.27.0
+npm install -g aws-cdk@2.32.1
 
 # install packages in the root folder
 npm install
