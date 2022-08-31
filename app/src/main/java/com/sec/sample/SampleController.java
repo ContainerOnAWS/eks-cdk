@@ -12,6 +12,11 @@ public class SampleController {
         return new String("OK");
     }
 
+    @RequestMapping(value="/{seviceid}", method=RequestMethod.GET)
+    public String pingPath1() {
+        return new String("OK");
+    }
+
     @RequestMapping(value="/{seviceid}/{pathvar1}", method=RequestMethod.GET)
     public String pingPath2() {
         return new String("OK");

@@ -31,21 +31,24 @@ Use the `cdk` command-line toolkit to interact with your project:
 
 |   | Stack                         | Time    |
 |---|-------------------------------|---------|
-| 1 | VPC                           | 4m      |
+| 1 | VPC                           | 3m 30s (optional) |
 | 2 | EKS cluster                   | 13m     |
 | 3 | EKS nodegroups                | 10m     |
-| 4 | Deploy(including ALB)         | 4m      |
-|   | Total                         | 31m     |
+| 4 | Build image and push to ECR   | 4m      |
+| 5 | Deploy(including ALB)         | 4m      |
+|   | Total                         | 31m (34m 30s with a new VPC)     |
 
 ## Install
 
 ### Step 1: VPC
 
-The VPC ID will be saved into the SSM Parameter Store to refer from other stacks.
+The VPC ID will be saved into the SSM Parameter Store named `/eks-cdk/vpc-id` to refer from other stacks.
 
-Parameter Name: `/cdk-eks/vpc-id`
+Create the SSM Parameter if you want to use the existing VPC:
 
-Use the `-c vpcId` context parameter to use the existing VPC.
+```bash
+aws ssm put-parameter --name "/eks-cdk/vpc-id" --value "{existing-vpc-id}" --type String 
+```
 
 ```bash
 cd vpc
@@ -64,24 +67,24 @@ cdk deploy
 cdk deploy -c vpcId=<vpc-id>
 ```
 
-[eks-cluster/lib/cluster-stack.ts](./eks-cluster/lib/cluster-stack.ts)
+[02-eks-cluster/lib/cluster-stack.ts](./02-eks-cluster/lib/cluster-stack.ts)
 
 SSM parameter:
 
-* /cdk-eks/vpc-id
+* /eks-cdk/vpc-id
 
 Cluster Name: [cluster-config.ts](./cluster-config.ts)
 
 ### Step 3: EKS nodegroup
 
 ```bash
-cd ../eks-nodegroup
+cd ../03-eks-nodegroup
 cdk deploy 
 ```
 
 SSM parameters:
 
-* /cdk-eks/vpc-id
+* /eks-cdk/vpc-id
 * /${clusterName}/openid-connect-provider-arn
 * /${clusterName}/kubectl-role-arn
 
@@ -89,44 +92,30 @@ SSM parameters:
 clusterName: eks-cluster-local, eks-cluster-dev, eks-cluster-stg
 ```
 
-[eks-nodegroup/lib/nodegroup-stack.ts](./eks-nodegroup/lib/nodegroup-stack.ts)
+[03-eks-nodegroup/lib/nodegroup-stack.ts](./03-eks-nodegroup/lib/nodegroup-stack.ts)
 
-### Step 4: Build
-
-Create an ECR for sample RESTful API:
-
-```bash
-REGION=$(aws configure get default.region)
-aws ecr create-repository --repository-name sample-rest-api --region ${REGION}
-```
+### Step 4: Build the SpringBoot Ping API
 
 Build and push to ECR:
 
 ```bash
-REGION=$(aws configure get default.region)
-ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-
-echo "ACCOUNT_ID: $ACCOUNT_ID"
-echo "REGION: $REGION"
-
-cd app
-docker build -t sample-rest-api .
-docker tag sample-rest-api:latest ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/sample-rest-api:latest
-aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com
-docker push ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/sample-rest-api:latest
+cd ../04-app
+./buiid.sh
 ```
 
-### Step 5: Deploy
+[04-app/build.sh](./04-app/build.sh)
+
+### Step 5: Deploy the API
 
 Create a YAML file for K8s Deployment, Service, HorizontalPodAutoscaler, and Ingress using a template file.
 
 ```bash
-sed -e "s|<account-id>|${ACCOUNT_ID}|g" sample-rest-api-template.yaml | sed -e "s|<region>|${REGION}|g" > sample-rest-api.yaml
-cat sample-rest-api.yaml
-kubectl apply -f sample-rest-api.yaml
+sed -e "s|<account-id>|${ACCOUNT_ID}|g" ping-api-template.yaml | sed -e "s|<region>|${REGION}|g" > ping-api.yaml
+cat ping-api.yaml
+kubectl apply -f ping-api.yaml
 ```
 
-[app/sample-rest-api-template.yaml](./app/sample-rest-api-template.yaml)
+[04-app/ping-api-template.yaml](./04-app/ping-api-template.yaml)
 
 ## Uninstall
 
@@ -134,7 +123,7 @@ kubectl apply -f sample-rest-api.yaml
 find . -name "cdk.context.json" -exec rm -f {} \;
 find . -name "cdk.out" -exec rm -rf {} \;
 
-cd eks-nodegroup
+cd 03-eks-nodegroup
 cdk destroy
 
 cd ../eks-cluster
@@ -160,7 +149,6 @@ cdk destroy
 │   ├── gunicorn.config.py
 │   ├── requirements.txt
 │   └── sample-rest-api-template.yaml
-├── eks-appdeploy
 ├── eks-cluster
 │   ├── bin
 │   │   └── index.ts
@@ -175,7 +163,7 @@ cdk destroy
 │   ├── jest.config.js
 │   └── lib
 │       └── cluster-nodegroup-stack.ts
-├── eks-nodegroup
+├── 03-eks-nodegroup
 │   ├── bin
 │   │   └── index.ts
 │   ├── cdk.json

@@ -5,21 +5,19 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
-import { CLUSTER_NAME, INSTANCE_TYPE, GPU_INSTANCE_TYPE } from '../../cluster-config';
-import { SSM_PREFIX } from '../../ssm-prefix';
+import { StackCommonProps, SSM_PREFIX, CLUSTER_NAME, INSTANCE_TYPE, GPU_INSTANCE_TYPE } from '../../config';
 
 /**
  * AmazonSSMManagedInstanceCore role is added to connect to EC2 instance by using SSM on AWS web console
  */
 export class EksNodegroupStack extends Stack {
-    constructor(scope: Construct, id: string, props?: StackProps) {
+    constructor(scope: Construct, id: string, props: StackCommonProps) {
         super(scope, id, props);
 
-        const stage = this.node.tryGetContext('stage') || 'local';
         const vpcId = this.node.tryGetContext('vpcId') || ssm.StringParameter.valueFromLookup(this, `${SSM_PREFIX}/vpc-id`);
         const vpc = ec2.Vpc.fromLookup(this, 'vpc', { vpcId: vpcId });
         
-        const clusterName = `${CLUSTER_NAME}-${stage}`;
+        const clusterName = `${CLUSTER_NAME}-${props.stage}`;
         const openidProviderArn = ssm.StringParameter.valueFromLookup(this, `/${clusterName}/openid-connect-provider-arn`);
         const kubectlRoleArn = ssm.StringParameter.valueFromLookup(this, `/${clusterName}/kubectl-role-arn`)
         const openIdConnectProvider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(this, 'importedProviderArn',
