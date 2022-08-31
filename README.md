@@ -2,12 +2,14 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ContainerOnAWS_eks-cdk&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ContainerOnAWS_eks-cdk) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ContainerOnAWS_eks-cdk&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=ContainerOnAWS_eks-cdk)
 
+![eks-cdk](./screenshots/eks-cdk.png?raw=true)
+
 ## Table of Contents
 
 1. VPC
 2. EKS cluster
 3. EKS nodegroup
-4. Build
+4. Build and push to ECR
 5. Deploy
 
 ## Prerequisites
@@ -38,7 +40,7 @@ Use the `cdk` command-line toolkit to interact with your project:
 | 5 | Deploy(including ALB)         | 4m      |
 |   | Total                         | 31m (34m 30s with a new VPC)     |
 
-## Install
+## Deploy
 
 ### Step 1: VPC
 
@@ -55,7 +57,7 @@ cd vpc
 cdk deploy
 ```
 
-[vpc/lib/vpc-stack.ts](./vpc/lib/vpc-stack.ts)
+[01-vpc/lib/vpc-stack.ts](./01-vpc/lib/vpc-stack.ts)
 
 ### Step 2: EKS cluster
 
@@ -73,7 +75,7 @@ SSM parameter:
 
 * /eks-cdk/vpc-id
 
-Cluster Name: [cluster-config.ts](./cluster-config.ts)
+Cluster Name: [config.ts](./config.ts)
 
 ### Step 3: EKS nodegroup
 
@@ -99,37 +101,43 @@ clusterName: eks-cluster-local, eks-cluster-dev, eks-cluster-stg
 Build and push to ECR:
 
 ```bash
-cd ../04-app
-./buiid.sh
+cd ../04-ecr
+cdk deploy 
 ```
 
-[04-app/build.sh](./04-app/build.sh)
+[04-ecr/lib/ecr-stack.ts](./04-ecr/lib/ecr-stack.ts)
 
 ### Step 5: Deploy the API
 
 Create a YAML file for K8s Deployment, Service, HorizontalPodAutoscaler, and Ingress using a template file.
 
 ```bash
+cd ../app
 sed -e "s|<account-id>|${ACCOUNT_ID}|g" ping-api-template.yaml | sed -e "s|<region>|${REGION}|g" > ping-api.yaml
 cat ping-api.yaml
 kubectl apply -f ping-api.yaml
 ```
 
-[04-app/ping-api-template.yaml](./04-app/ping-api-template.yaml)
+[app/ping-api-template.yaml](./app/ping-api-template.yaml)
 
-## Uninstall
+## Cleanup
 
 ```bash
+find . -name "node_modules" -exec rm -rf {} \;
 find . -name "cdk.context.json" -exec rm -f {} \;
 find . -name "cdk.out" -exec rm -rf {} \;
+find . -name "build" -exec rm -rf {} \;
 
-cd 03-eks-nodegroup
+cd 04-ecr
 cdk destroy
 
-cd ../eks-cluster
+cd ../03-eks-nodegroup
 cdk destroy
 
-cd ../vpc
+cd ../02-eks-cluster
+cdk destroy
+
+cd ../01-vpc
 cdk destroy
 ```
 
@@ -138,31 +146,24 @@ cdk destroy
 ```text
 .
 ├── build.gradle
-├── cluster-config.ts
-├── ssm-prefix.ts
+├── config.ts
 ├── package-lock.json
 ├── package.json
 ├── tsconfig.json
-├── app
-│   ├── Dockerfile
-│   ├── flask_api.py
-│   ├── gunicorn.config.py
-│   ├── requirements.txt
-│   └── sample-rest-api-template.yaml
-├── eks-cluster
+├── 01-vpc
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   ├── jest.config.js
+│   └── lib
+│       └── vpc-stack.ts
+├── 02 eks-cluster
 │   ├── bin
 │   │   └── index.ts
 │   ├── cdk.json
 │   ├── jest.config.js
 │   └── lib
 │       └── cluster-stack.ts
-├── eks-cluster-nodegroup
-│   ├── bin
-│   │   └── index.ts
-│   ├── cdk.json
-│   ├── jest.config.js
-│   └── lib
-│       └── cluster-nodegroup-stack.ts
 ├── 03-eks-nodegroup
 │   ├── bin
 │   │   └── index.ts
@@ -170,12 +171,33 @@ cdk destroy
 │   ├── jest.config.js
 │   └── lib
 │       └── nodegroup-stack.ts
-└── vpc
-    ├── bin
-    │   └── index.ts
-    ├── cdk.json
-    └── lib
-        └── vpc-stack.ts
+├── 04-ecr
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   └── lib
+│       └── ecr-stack.ts
+├── eks-cluster-nodegroup
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   ├── jest.config.js
+│   └── lib
+│       └── cluster-nodegroup-stack.ts
+├── app
+│   ├── Dockerfile
+│   ├── build.gradle
+│   ├── build.sh
+│   ├── ping-api-template.yaml
+│   └── src
+│       └── main
+│           ├── java
+│           │   └── com
+│           │       └── sample
+│           │           ├── SampleApplication.java
+│           │           └── SampleController.java
+│           └── resources
+│               └── application.yaml
 ```
 
 ## Reference
