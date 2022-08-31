@@ -1,4 +1,4 @@
-import { Stack, StackProps, CfnOutput } from 'aws-cdk-lib';
+import { Stack, CfnOutput } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as eks from 'aws-cdk-lib/aws-eks';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -14,7 +14,6 @@ export class EksClusterNodegroupStack extends Stack {
     constructor(scope: Construct, id: string, props: StackCommonProps) {
         super(scope, id, props);
 
-        // const stage = this.node.tryGetContext('stage') || 'local';
         const vpcId = this.node.tryGetContext('vpcId') || ssm.StringParameter.valueFromLookup(this, `${SSM_PREFIX}/vpc-id`);
         const vpc = ec2.Vpc.fromLookup(this, 'vpc', { vpcId: vpcId });
 
