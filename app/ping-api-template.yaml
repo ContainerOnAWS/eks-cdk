@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: ping-api
-          image: <account-id>.dkr.ecr.<region>.amazonaws.com/eks-terraform:latest
+          image: <account-id>.dkr.ecr.<region>.amazonaws.com/eks-cdk:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
