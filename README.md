@@ -193,10 +193,9 @@ cdk destroy
 │       └── main
 │           ├── java
 │           │   └── com
-│           │       └── sec
-│           │           └── sample
-│           │               ├── SampleApplication.java
-│           │               └── SampleController.java
+│           │       └── sample
+│           │           ├── SampleApplication.java
+│           │           └── SampleController.java
 │           └── resources
 │               └── application.yaml
 ```

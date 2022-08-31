@@ -10,9 +10,9 @@ repositories {
 }
 
 archivesBaseName = 'app'
-application {
-    mainClass = 'com.sample.SampleApplication'
-}
+// application {
+//     mainClass = 'com.sample.SampleApplication'
+// }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
