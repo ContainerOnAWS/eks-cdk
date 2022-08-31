@@ -120,7 +120,7 @@ kubectl apply -f ping-api.yaml
 
 [app/ping-api-template.yaml](./app/ping-api-template.yaml)
 
-## Uninstall
+## Cleanup
 
 ```bash
 find . -name "node_modules" -exec rm -rf {} \;
