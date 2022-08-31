@@ -1,0 +1,72 @@
+.
+├── 01-vpc
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   └── lib
+│       └── vpc-stack.ts
+├── 02-eks-cluster
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   ├── jest.config.js
+│   └── lib
+│       └── cluster-stack.ts
+├── 03-eks-nodegroup
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   ├── jest.config.js
+│   └── lib
+│       └── nodegroup-stack.ts
+├── 04-ecr
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   └── lib
+│       └── ecr-stack.ts
+├── 1.txt
+├── README.md
+├── app
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── build.gradle
+│   ├── build.sh
+│   ├── buildspec.yaml
+│   ├── gradle
+│   │   └── wrapper
+│   │       ├── gradle-wrapper.jar
+│   │       └── gradle-wrapper.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── ping-api-template.yaml
+│   └── src
+│       └── main
+│           ├── java
+│           │   └── com
+│           │       └── sec
+│           │           └── sample
+│           │               ├── SampleApplication.java
+│           │               └── SampleController.java
+│           └── resources
+│               └── application.yaml
+├── build.gradle
+├── config.ts
+├── eks-cluster-nodegroup
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   ├── jest.config.js
+│   └── lib
+│       └── cluster-nodegroup-stack.ts
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── package-lock.json
+├── package.json
+└── tsconfig.json
+
+27 directories, 42 files

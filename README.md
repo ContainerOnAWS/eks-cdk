@@ -99,11 +99,11 @@ clusterName: eks-cluster-local, eks-cluster-dev, eks-cluster-stg
 Build and push to ECR:
 
 ```bash
-cd ../04-app
-./buiid.sh
+cd ../04-ecr
+cdk deploy 
 ```
 
-[04-app/build.sh](./04-app/build.sh)
+[04-ecr/lib/ecr-stack](./04-ecr/lib/ecr-stack)
 
 ### Step 5: Deploy the API
 
@@ -120,8 +120,10 @@ kubectl apply -f ping-api.yaml
 ## Uninstall
 
 ```bash
+find . -name "node_modules" -exec rm -rf {} \;
 find . -name "cdk.context.json" -exec rm -f {} \;
 find . -name "cdk.out" -exec rm -rf {} \;
+find . -name "build" -exec rm -rf {} \;
 
 cd 03-eks-nodegroup
 cdk destroy
@@ -163,6 +165,12 @@ cdk destroy
 │   ├── jest.config.js
 │   └── lib
 │       └── nodegroup-stack.ts
+├── 04-ecr
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   └── lib
+│       └── ecr-stack.ts
 ├── eks-cluster-nodegroup
 │   ├── bin
 │   │   └── index.ts
