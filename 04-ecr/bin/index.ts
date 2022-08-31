@@ -9,11 +9,12 @@ const env = {
     region: process.env.CDK_DEFAULT_REGION
 };
 const stage = app.node.tryGetContext('stage') || DEFAULT_STAGE;
-const serviceName = 'eks-cdk';
+const repositoryName = 'eks-cdk';
 
-new EcrCodeCommitStack(app, `ecr-${serviceName}`, {
+new EcrCodeCommitStack(app, `ecr-${repositoryName}`, {
     env,
+    repositoryName,
     stage,
-    description: `ECR: ${serviceName}`,
+    description: `ECR: ${repositoryName}`,
     terminationProtection: stage!==DEFAULT_STAGE
 });
