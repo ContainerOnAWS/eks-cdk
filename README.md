@@ -40,7 +40,7 @@ Use the `cdk` command-line toolkit to interact with your project:
 | 5 | Deploy(including ALB)         | 4m      |
 |   | Total                         | 31m (34m 30s with a new VPC)     |
 
-## Install
+## Deploy
 
 ### Step 1: VPC
 
