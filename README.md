@@ -138,31 +138,24 @@ cdk destroy
 ```text
 .
 ├── build.gradle
-├── cluster-config.ts
-├── ssm-prefix.ts
+├── config.ts
 ├── package-lock.json
 ├── package.json
 ├── tsconfig.json
-├── app
-│   ├── Dockerfile
-│   ├── flask_api.py
-│   ├── gunicorn.config.py
-│   ├── requirements.txt
-│   └── sample-rest-api-template.yaml
-├── eks-cluster
+├── 01-vpc
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   ├── jest.config.js
+│   └── lib
+│       └── vpc-stack.ts
+├── 02 eks-cluster
 │   ├── bin
 │   │   └── index.ts
 │   ├── cdk.json
 │   ├── jest.config.js
 │   └── lib
 │       └── cluster-stack.ts
-├── eks-cluster-nodegroup
-│   ├── bin
-│   │   └── index.ts
-│   ├── cdk.json
-│   ├── jest.config.js
-│   └── lib
-│       └── cluster-nodegroup-stack.ts
 ├── 03-eks-nodegroup
 │   ├── bin
 │   │   └── index.ts
@@ -170,12 +163,28 @@ cdk destroy
 │   ├── jest.config.js
 │   └── lib
 │       └── nodegroup-stack.ts
-└── vpc
-    ├── bin
-    │   └── index.ts
-    ├── cdk.json
-    └── lib
-        └── vpc-stack.ts
+├── eks-cluster-nodegroup
+│   ├── bin
+│   │   └── index.ts
+│   ├── cdk.json
+│   ├── jest.config.js
+│   └── lib
+│       └── cluster-nodegroup-stack.ts
+├── app
+│   ├── Dockerfile
+│   ├── build.gradle
+│   ├── build.sh
+│   ├── ping-api-template.yaml
+│   └── src
+│       └── main
+│           ├── java
+│           │   └── com
+│           │       └── sec
+│           │           └── sample
+│           │               ├── SampleApplication.java
+│           │               └── SampleController.java
+│           └── resources
+│               └── application.yaml
 ```
 
 ## Reference
