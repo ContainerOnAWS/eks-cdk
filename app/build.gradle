@@ -2,14 +2,16 @@ plugins {
 	id 'org.springframework.boot' version '2.2.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
+	id 'application'
 }
-
-group = 'devopssample'
-version = '0.0.1'
-sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
+}
+
+archivesBaseName = 'app'
+application {
+    mainClass = 'com.sample.SampleApplication'
 }
 
 dependencies {
