@@ -55,7 +55,7 @@ cd vpc
 cdk deploy
 ```
 
-[vpc/lib/vpc-stack.ts](./vpc/lib/vpc-stack.ts)
+[01-vpc/lib/vpc-stack.ts](./01-vpc/lib/vpc-stack.ts)
 
 ### Step 2: EKS cluster
 
@@ -73,7 +73,7 @@ SSM parameter:
 
 * /eks-cdk/vpc-id
 
-Cluster Name: [cluster-config.ts](./cluster-config.ts)
+Cluster Name: [config.ts](./config.ts)
 
 ### Step 3: EKS nodegroup
 
@@ -103,19 +103,20 @@ cd ../04-ecr
 cdk deploy 
 ```
 
-[04-ecr/lib/ecr-stack](./04-ecr/lib/ecr-stack)
+[04-ecr/lib/ecr-stack.ts](./04-ecr/lib/ecr-stack.ts)
 
 ### Step 5: Deploy the API
 
 Create a YAML file for K8s Deployment, Service, HorizontalPodAutoscaler, and Ingress using a template file.
 
 ```bash
+cd ../app
 sed -e "s|<account-id>|${ACCOUNT_ID}|g" ping-api-template.yaml | sed -e "s|<region>|${REGION}|g" > ping-api.yaml
 cat ping-api.yaml
 kubectl apply -f ping-api.yaml
 ```
 
-[04-app/ping-api-template.yaml](./04-app/ping-api-template.yaml)
+[app/ping-api-template.yaml](./app/ping-api-template.yaml)
 
 ## Uninstall
 
@@ -125,13 +126,16 @@ find . -name "cdk.context.json" -exec rm -f {} \;
 find . -name "cdk.out" -exec rm -rf {} \;
 find . -name "build" -exec rm -rf {} \;
 
-cd 03-eks-nodegroup
+cd 04-ecr
 cdk destroy
 
-cd ../eks-cluster
+cd ../03-eks-nodegroup
 cdk destroy
 
-cd ../vpc
+cd ../02-eks-cluster
+cdk destroy
+
+cd ../01-vpc
 cdk destroy
 ```
 
