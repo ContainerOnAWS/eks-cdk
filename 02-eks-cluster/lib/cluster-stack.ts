@@ -5,19 +5,12 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
-import { CLUSTER_NAME } from './cluster-config';
-import { SSM_PREFIX } from '../../ssm-prefix';
+import { StackCommonProps, SSM_PREFIX, CLUSTER_NAME } from '../../config';
 
-/**
- * 
- * 
- * 
- */
 export class EksClusterStack extends Stack {
-    constructor(scope: Construct, id: string, props?: StackProps) {
+    constructor(scope: Construct, id: string, props: StackCommonProps) {
         super(scope, id, props);
 
-        const stage = this.node.tryGetContext('stage') || 'local';
         const vpcId = this.node.tryGetContext('vpcId') || ssm.StringParameter.valueFromLookup(this, `${SSM_PREFIX}/vpc-id`);
         const vpc = ec2.Vpc.fromLookup(this, 'vpc', { vpcId: vpcId });
 
@@ -31,11 +24,11 @@ export class EksClusterStack extends Stack {
         clusterRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonEKSServicePolicy"));
         clusterRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonEKSClusterPolicy"));
 
-        const clusterName = `${CLUSTER_NAME}-${stage}`;
+        const clusterName = `${CLUSTER_NAME}-${props.stage}`;
         const cluster = new eks.Cluster(this, 'eks-cluster', {
             clusterName: clusterName,
             tags: {
-                Stage: stage,
+                Stage: props.stage,
                 Name: clusterName,
             },
             mastersRole: clusterAdmin,

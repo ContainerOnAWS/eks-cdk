@@ -1,4 +1,4 @@
-package com.sec.sample;
+package com.sample;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +9,11 @@ public class SampleController {
 
     @RequestMapping(value="/", method=RequestMethod.GET)
     public String home() {
+        return new String("OK");
+    }
+
+    @RequestMapping(value="/{seviceid}", method=RequestMethod.GET)
+    public String pingPath1() {
         return new String("OK");
     }
 

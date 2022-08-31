@@ -4,10 +4,10 @@ import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 
-import { SSM_PREFIX } from '../../ssm-prefix';
+import { StackCommonProps, SSM_PREFIX } from '../../config';
 
 export class VpcStack extends Stack {
-    constructor(scope: Construct, id: string, props?: StackProps) {
+    constructor(scope: Construct, id: string, props: StackCommonProps) {
         super(scope, id, props);
 
         const cidr = `10.100.0.0/16`;
