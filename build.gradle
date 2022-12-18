@@ -17,8 +17,8 @@ buildscript {
 sonarqube {
     properties {
         property "sonar.projectName", "eks-cdk"
-        property "sonar.projectKey", "ContainerOnAWS_eks-cdk"
-        property "sonar.organization", "containeronaws"
+        property "sonar.projectKey", "DevSecOpsSamples_eks-cdk"
+        property "sonar.organization", "DevSecOpsSamples"
         // property "sonar.host.url", "http://127.0.0.1:9000"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.sourceEncoding", "UTF-8"
@@ -28,7 +28,6 @@ sonarqube {
         property "sonar.issue.ignore.multicriteria", "e1"
         property "sonar.issue.ignore.multicriteria.e1.ruleKey", "typescript:S1848"
         property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.ts"
-        property "sonar.links.ci", "https://github.com/ContainerOnAWS/eks-cdk"
-        property "sonar.log.level", "DEBUG"
+        property "sonar.links.ci", "https://github.com/DevSecOpsSamples/eks-cdk/actions"
     }
 }
