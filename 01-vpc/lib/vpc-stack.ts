@@ -7,7 +7,7 @@ import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { StackCommonProps, SSM_PREFIX } from '../../config';
 
 export class VpcStack extends Stack {
-    constructor(scope: Construct, id: string, props: StackCommonProps) {
+    constructor(scope: Construct, id: string, props: StackCommonProps) 
         super(scope, id, props);
 
         const cidr = `10.100.0.0/16`;
