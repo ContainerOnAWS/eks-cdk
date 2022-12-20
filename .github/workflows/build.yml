@@ -7,24 +7,31 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  cdk-build:
+  build-cdk:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [ 18 ]
-    name: Node ${{ matrix.node }} sample
     steps:
       - uses: actions/checkout@v3
-      - name: Setup node
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install && npm run build
+      - name: Build CDK
+        run: npm install && npm run build
 
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: cd app && docker build . -t eks-cdk:$(date +%s)
+  
   sonarqube:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 11
